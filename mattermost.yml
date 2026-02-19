@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  mattermost:
+    image: mattermost/mattermost-team-edition
+    ports:
+      - "8065:8065"
+    volumes:
+      - ./data:/opt/mattermost
+    environment:
+      MM_SQLSETTINGS_DRIVERNAME: "postgres"
+      MM_SQLSETTINGS_DATASOURCE: "postgres://postgres:PassWord@db:5432/mattermost?sslmode=disable"
+      MM_SITEURL: "http://IP:8065"
+      MM_ENABLEOPENSERVER: "true"
+
+    depends_on:
+      - db
+
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: PassWord
+      POSTGRES_DB: mattermost
+    volumes:
+      - ./db_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
